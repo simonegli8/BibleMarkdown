@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "BibleMarkdown": {
+      "commandName": "Project",
+      "commandLineArgs": "",
+      "workingDirectory": "C:\\GitHub\\BibliaLibre\\Bibles\\Spanish.ReinaValera1909"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "environmentVariables": {},
+      "distributionName": ""
+    }
+  }
+}
