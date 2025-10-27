@@ -9,7 +9,6 @@
 **/out/pdf/
 **/out/html/
 **/out/epub/
-nupkg/*.*
 NugetApiKey.txt
 
 # User-specific files
