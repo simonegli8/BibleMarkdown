@@ -67,7 +67,7 @@ partial class Program
 
 		// text = Regex.Replace(text, @"\^([0-9]+)\^", @"\bibleverse{$1}"); // verses
 		text = Regex.Replace(text, @"/\*.*?\*/", "", RegexOptions.Singleline); // comments
-		text = Regex.Replace(text, @"//.*?\r?\n", "", RegexOptions.Multiline); // single line comments
+		text = Regex.Replace(text, @"(?<!:)//.*?\r?\n", "", RegexOptions.Multiline); // single line comments
 
 		// text = Regex.Replace(text, @"^(# .*?)$\n^(## .*?)$", "$2\n$1", RegexOptions.Multiline); // titles
 		text = Regex.Replace(text, @"\^\^", "^"); // alternative for superscript
