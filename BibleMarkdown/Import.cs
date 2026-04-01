@@ -21,17 +21,27 @@ partial class Program
 		srcpath = Path.Combine(srcpath, "bibmark");
 		if (!Directory.Exists(srcpath)) return;
 		var sources = Directory.EnumerateFiles(srcpath)
-			.Where(file => file.EndsWith(".md") && Regex.IsMatch(file, "^[0-9.]-"));
+			.Where(file => file.EndsWith(".md", StringComparison.OrdinalIgnoreCase) &&
+			Regex.IsMatch(Path.GetFileName(file), "^[0-9][0-9.]*-"));
 		if (sources.Any())
 		{
 			if (FromSource)
 			{
-				Imported = true;
+                Log("Import from Bibmark");
+
+                Imported = true;
 
 				foreach (var source in sources)
 				{
 					var dest = Path.Combine(mdpath, Path.GetFileName(source));
-					File.Copy(source, dest, true);
+					
+					var srctext = File.ReadAllText(source);
+					var desttext = File.Exists(dest) ? File.ReadAllText(dest) : null;
+					if (srctext != desttext)
+					{
+						File.Copy(source, dest, true);
+						LogFile(dest);
+					}
 				}
 			}
 		}

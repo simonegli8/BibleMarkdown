@@ -3,6 +3,8 @@
     <File Path=".gitignore" />
     <File Path="PushToNuget.bat" />
   </Folder>
-  <Project Path="BibleMarkdown.Msi/BibleMarkdown.Msi.vdproj" Type="Installer" />
+  <Project Path="BibleMarkdown.Msi/BibleMarkdown.Msi.vdproj" Type="Installer">
+    <Build />
+  </Project>
   <Project Path="BibleMarkdown/BibleMarkdown.csproj" />
 </Solution>
