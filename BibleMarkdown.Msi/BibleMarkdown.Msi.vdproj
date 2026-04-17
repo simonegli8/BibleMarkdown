@@ -15,7 +15,7 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_8EEA7935F26C4F30870C5A899D46E03D"
+        "MsmKey" = "8:_BF9DC0DA032F47C28F5E1B17D8DF985E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -178,7 +178,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BibleMarkdown"
         "ProductCode" = "8:{672BB3F5-3B64-40C8-90E8-4FFE6C90F456}"
-        "PackageCode" = "8:{7675852F-F9D3-401C-A8CE-1D8B09A5C47A}"
+        "PackageCode" = "8:{B4D0319D-F42D-48E3-BC7F-FDCCE308393A}"
         "UpgradeCode" = "8:{19151234-7313-4091-888A-89A8AEB4A1FD}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -775,9 +775,9 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8EEA7935F26C4F30870C5A899D46E03D"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BF9DC0DA032F47C28F5E1B17D8DF985E"
             {
-            "SourcePath" = "8:..\\BibleMarkdown\\obj\\Debug\\net10.0\\bibmark.dll"
+            "SourcePath" = "8:..\\BibleMarkdown\\obj\\Debug\\net10.0\\apphost.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_6A96BE4D5E754DA6BE28E63A6BE5CBA3"
@@ -796,7 +796,7 @@
             "IsolateTo" = "8:"
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
+            "OutputGroupCanonicalName" = "8:PublishItems"
             "OutputProjectGuid" = "8:{CF1EE3DE-9DA5-F554-170D-24A9EBD94633}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
