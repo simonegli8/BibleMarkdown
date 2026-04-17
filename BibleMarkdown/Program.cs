@@ -1,21 +1,22 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Reflection;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
-using System.Diagnostics.Tracing;
-using System.Security.Cryptography;
 using System.Data.SqlTypes;
+using System.Diagnostics;
+using System.Diagnostics.Tracing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
-using System.Linq;
-using System.Runtime.InteropServices;
-using Microsoft.CodeAnalysis.Scripting;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
 
 namespace BibleMarkdown;
 
@@ -28,6 +29,7 @@ partial class Program
     public static bool EachVerseOnNewLine = true;
     public static bool FromSource = false;
     public static bool Imported = false;
+    public static string SwordVersification = "KJV";
     public static bool Help = false;
     public static bool ParagraphVerses = true;
     public static Func<string, string> Preprocess = s => s;
@@ -45,6 +47,20 @@ partial class Program
             }
         }
     }
+
+    public static string LanguageCode
+    {
+        get
+        {
+            var language = Regex.Replace(Language, "[0-9]", "");
+            var culture = CultureInfo
+                .GetCultures(CultureTypes.NeutralCultures)
+                .FirstOrDefault(c => c.EnglishName.StartsWith(language, StringComparison.OrdinalIgnoreCase) ||
+                    c.NativeName.StartsWith(language, StringComparison.OrdinalIgnoreCase));
+            return culture?.Name ?? "en";
+        }
+    }
+
     public static string RightLanguage
     {
         get { return rightlanguage; }
@@ -166,7 +182,6 @@ partial class Program
         var htmlfile = Path.Combine(html, Path.GetFileNameWithoutExtension(file) + ".html");
         var epubfile = Path.Combine(mdepub, Path.GetFileNameWithoutExtension(file) + ".md");
         var usfmfile = Path.Combine(usfm, Path.GetFileNameWithoutExtension(file) + ".usfm");
-
         Task TeXTask = Task.CompletedTask, HtmlTask = Task.CompletedTask;
 
         CreatePandoc(file, mdfile);
@@ -176,7 +191,7 @@ partial class Program
     }
 
 
-    static void ProcessPath(string path)
+    static async Task ProcessPath(string path)
     {
         RunScript(path);
         var srcpath = Path.Combine(path, "src");
@@ -203,8 +218,11 @@ partial class Program
         {
             CreateOutline(path);
             CreateVerseStats(path);
+            var osisFile = Path.Combine(path, "out", "osis", $"{Path.GetFileName(path)}.xml");
+            CreateOSIS(files, osisFile);
+            await CreateSWORD(osisFile, Path.Combine(path, "out", "sword", "modules", "texts", "ztext", Path.GetFileName(path)), Program.SwordVersification);
             Log("Convert to Pandoc...");
-            Task.WaitAll(files.AsParallel().Select(file => ProcessFileAsync(file)).ToArray());
+            await Task.WhenAll(files.AsParallel().Select(file => ProcessFileAsync(file)));
         }
         File.WriteAllText(Path.Combine(outpath, "bibmark.log"), log.ToString());
         log.Clear();
@@ -387,7 +405,7 @@ Options:
   ");
     }
 
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         // Install bibmark on Linux & macOS systems
         if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
@@ -488,14 +506,14 @@ Options:
         if (paths.Count == 0)
         {
             path = Directory.GetCurrentDirectory();
-            ProcessPath(path);
+            await ProcessPath(path);
         }
         else
         {
             path = paths[0];
             if (Directory.Exists(path))
             {
-                ProcessPath(path);
+                await ProcessPath(path);
             }
             else if (File.Exists(path)) ProcessFileAsync(path).Wait();
         }
