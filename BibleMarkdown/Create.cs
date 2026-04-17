@@ -183,6 +183,18 @@ partial class Program
             // remove comments
             text = Regex.Replace(text, @"/\*.*?\*/", "", RegexOptions.Singleline); // comments
             text = Regex.Replace(text, @"(?<!:)//.*?\r?\n", "", RegexOptions.Multiline); // single line comments
+            // resolve footnotes
+            bool replaced;
+            do
+            {
+                replaced = false;
+                text = Regex.Replace(text, @"\^(?<mark>[a-zA-Z]+)\^(?!\[)(?<text>.*?)(?:\^\k<mark>(?<footnote>\^\[(?>\[(?<c>)|[^\[\]]+|\](?<-c>))*(?(c)(?!))\]))[ \t]*\r?\n?", m =>
+                {
+                    replaced = true;
+                    return $"{m.Groups["footnote"].Value}{m.Groups["text"].Value}";
+                }, RegexOptions.Singleline);// ^^ footnotes
+            } while (replaced);
+
 
             int i = 1;
             var chapters = Regex.Matches(text, @"(?<=(^|\n))#[ \t]+(?<chapter>[0-9]+)[ \t]*\r?\n(?<text>.*?)(?=\r?\n#[ \t]+[0-9]+|\s*$)", RegexOptions.Singleline)
