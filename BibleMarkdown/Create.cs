@@ -58,7 +58,8 @@ partial class Program
 
     static void CreatePandoc(string file, string panfile)
     {
-        if (IsNewer(panfile, file)) return;
+        if ((Output & (Outputs.Pandoc | Outputs.USFM | Outputs.TeX | Outputs.Epub | Outputs.Html)) == Outputs.None ||
+            IsNewer(panfile, file)) return;
 
         var text = File.ReadAllText(file);
 
@@ -147,6 +148,7 @@ partial class Program
 
     public static void CreateOSIS(IEnumerable<string> mdfiles, string osisFile)
     {
+        if (!Output.HasFlag(Outputs.OSIS)) return;
         var mdmodified = mdfiles.Select(file => File.GetLastWriteTimeUtc(file)).Max();
         if (mdmodified <= File.GetLastWriteTimeUtc(osisFile)) return;
 
@@ -294,6 +296,8 @@ partial class Program
 
     public static async Task CreateSWORD(string osisFile, string swordPath, string versification = "KJV")
     {
+        if (!Output.HasFlag(Outputs.Sword)) return;
+
         var osis2mod = Pandoc.Find("osis2mod");
         if (osis2mod != null && File.Exists(osisFile) &&
             (!Directory.Exists(swordPath) || File.GetLastWriteTimeUtc(osisFile) > Directory.GetLastWriteTimeUtc(swordPath)))
@@ -325,7 +329,7 @@ partial class Program
 
     static async Task CreateTeXAsync(string mdfile, string texfile)
     {
-        if (IsNewer(texfile, mdfile)) return;
+        if (!Output.HasFlag(Outputs.TeX) || IsNewer(texfile, mdfile)) return;
 
         var mdtexfile = Path.Combine(Path.GetDirectoryName(mdfile), "tex", Path.GetFileName(mdfile));
         var book = Regex.Match(mdfile, "[0-9.]+(?=-.*\\.md$)").Value.Replace('.', '-');
@@ -353,7 +357,7 @@ partial class Program
 
     static async Task CreateHtmlAsync(string mdfile, string htmlfile)
     {
-        if (IsNewer(htmlfile, mdfile) || TwoLanguage) return;
+        if (!Output.HasFlag(Outputs.Html) || IsNewer(htmlfile, mdfile) || TwoLanguage) return;
 
         //var mdhtmlfile = Path.ChangeExtension(mdfile, ".html.md");
 
@@ -618,6 +622,8 @@ partial class Program
 
     static void CreateUSFM(string mdfile, string usfmfile)
     {
+        if (!Output.HasFlag(Outputs.USFM)) return;
+
         mdfile = Path.Combine(Path.GetDirectoryName(mdfile), "usfm", Path.GetFileName(mdfile));
 
         if (IsNewer(usfmfile, mdfile) || TwoLanguage) return;

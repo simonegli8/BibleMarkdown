@@ -20,9 +20,10 @@ using System.Xml.Linq;
 
 namespace BibleMarkdown;
 
+[Flags]
+public enum Outputs { Pandoc = 1, Html = 2, TeX = 4, Epub = 8, USFM = 0x10, OSIS = 0x20, Sword = 0x40, All = 0xFFFF, None = 0 };
 partial class Program
 {
-
     public static DateTime bibmarktime;
     public static bool LowercaseFirstWords = false;
     public static bool ImportStrongs = false;
@@ -34,6 +35,7 @@ partial class Program
     public static bool ParagraphVerses = true;
     public static Func<string, string> Preprocess = s => s;
     public static Func<string, string> PreprocessImportUSFM = s => s;
+    public static Outputs Output { get; set; } = Outputs.All;
     static string language;
     public static string Language
     {
