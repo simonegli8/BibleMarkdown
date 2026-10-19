@@ -95,3 +95,7 @@ You can also place a file linklist.xml in the src folder, to specify parallel ve
 
 For examples of the various input files like booknames.xml, linklist.xml, outline.md etc. you can have a look at the Bibles in the BibliaLibre project at
 https://github.com/biblia-del-pueblo/BibliaLibre.
+
+# Pandoc
+
+Pandoc 3.12.1 comes packed with this app, but you might install a newer version of pandoc, and if it's in your PATH, BibleMarkdown will use it.
